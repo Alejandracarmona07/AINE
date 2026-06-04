@@ -14,9 +14,9 @@ export default defineConfig({
     registerType: 'autoUpdate',
     injectRegister: false,
 
+    includeAssets: ['favicon.svg'],
     pwaAssets: {
-      disabled: false,
-      config: true,
+      disabled: true,
     },
 
     manifest: {

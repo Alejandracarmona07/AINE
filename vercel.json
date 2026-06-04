@@ -1,7 +1,8 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "installCommand": "npm install --prefix aine-frontend",
-  "buildCommand": "npm run build --prefix aine-frontend",
+  "installCommand": "cd aine-frontend && npm ci --no-audit --no-fund",
+  "buildCommand": "cd aine-frontend && npm run build",
   "outputDirectory": "aine-frontend/dist",
+  "framework": null,
   "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
 }
