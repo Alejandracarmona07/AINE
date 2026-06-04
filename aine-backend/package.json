@@ -1,0 +1,44 @@
+{
+  "name": "aine-backend",
+  "version": "1.0.0",
+  "description": "proyecto de venta de maquillaje comercial ",
+  "keywords": [
+    "maquillaje",
+    "comercio",
+    "belleza",
+    "cursos",
+    "productos",
+    "pestañina",
+    "base",
+    "polvo",
+    "brillo",
+    "gloss",
+    "aprendizaje",
+    "contorno"
+  ],
+  "homepage": "https://github.com/Alejandracarmona07/AINE#readme",
+  "bugs": {
+    "url": "https://github.com/Alejandracarmona07/AINE/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Alejandracarmona07/AINE.git"
+  },
+  "license": "Apache-2.0",
+  "author": "Alejandra Duque",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node --watch index.js",
+    "start": "node index.js",
+    "db:clevercloud": "node database/setup-clevercloud.js",
+    "db:migrate": "node database/run-migration.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "mongodb": "^7.2.0",
+    "mysql2": "^3.22.4"
+  }
+}

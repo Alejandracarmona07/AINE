@@ -1,0 +1,65 @@
+erDiagram
+    usuarios ||--o{ pedidos : realiza
+    pedidos ||--|{ pedido_items : contiene
+    productos ||--o{ pedido_items : incluye
+    categorias ||--o{ productos : agrupa
+
+    usuarios {
+        int id PK
+        varchar nombre
+        varchar email UK
+        varchar password_hash
+        varchar telefono
+        enum rol "cliente | admin"
+        tinyint activo
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    categorias {
+        int id PK
+        varchar nombre UK
+        text descripcion
+        timestamp created_at
+    }
+
+    productos {
+        int id PK
+        int categoria_id FK
+        varchar nombre
+        text descripcion
+        decimal precio
+        varchar imagen_url
+        int stock
+        tinyint activo
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    cursos {
+        int id PK
+        varchar titulo
+        text descripcion
+        decimal precio
+        varchar imagen_url
+        tinyint activo
+        timestamp created_at
+    }
+
+    pedidos {
+        int id PK
+        int usuario_id FK
+        decimal total
+        enum estado "pendiente | pagado | enviado | entregado | cancelado"
+        text notas
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    pedido_items {
+        int id PK
+        int pedido_id FK
+        int producto_id FK
+        int cantidad
+        decimal precio_unitario
+    }

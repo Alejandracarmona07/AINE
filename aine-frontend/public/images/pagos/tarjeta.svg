@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 48" role="img" aria-label="Tarjeta">
+  <rect width="120" height="48" rx="8" fill="#1a1a2e"/>
+  <rect x="12" y="14" width="96" height="20" rx="4" fill="#d6336c"/>
+  <rect x="18" y="28" width="24" height="4" rx="2" fill="#faa0fd"/>
+  <text x="60" y="24" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="10">Tarjeta</text>
+</svg>
