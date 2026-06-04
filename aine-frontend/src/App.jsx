@@ -267,7 +267,7 @@ function App() {
           rel="noopener noreferrer"
           aria-label="Instagram"
         >
-          <img src="/images/social/instagram.svg" alt="" />
+          <img src="/images/social/instagram.png" alt="" />
         </a>
         <a
           href="https://www.facebook.com/share/16FZK6FQax/"
@@ -275,7 +275,7 @@ function App() {
           rel="noopener noreferrer"
           aria-label="Facebook"
         >
-          <img src="/images/social/facebook.svg" alt="" />
+          <img src="/images/social/facebook.png" alt="" />
         </a>
         <a
           href="https://wa.me/573112599598"
@@ -283,7 +283,7 @@ function App() {
           rel="noopener noreferrer"
           aria-label="WhatsApp"
         >
-          <img src="/images/social/whatsapp.svg" alt="" />
+          <img src="/images/social/whatsapp.png" alt="" />
         </a>
       </aside>
 
