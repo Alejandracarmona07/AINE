@@ -83,7 +83,7 @@ export function useCart() {
   }
 }
 
-export function buildWhatsAppUrl(items, total) {
+export function buildWhatsAppUrl(items, total, whatsapp = '573112599598') {
   const lineas = items.map(
     (i) =>
       `• ${i.nombre} (${i.tipo === 'curso' ? 'Curso' : i.categoria}) x${i.cantidad} — $${(i.precio * i.cantidad).toLocaleString('es-CO')}`,
@@ -98,5 +98,5 @@ export function buildWhatsAppUrl(items, total) {
     '¿Cuál forma de pago prefieren?',
   ].join('\n')
 
-  return `https://wa.me/573112599598?text=${encodeURIComponent(mensaje)}`
+  return `https://wa.me/${whatsapp}?text=${encodeURIComponent(mensaje)}`
 }

@@ -8,6 +8,7 @@ export default function Carrito({
   onQuitar,
   onCambiarCantidad,
   onVaciar,
+  whatsapp = '573112599598',
 }) {
   if (!abierto) return null
 
@@ -80,7 +81,7 @@ export default function Carrito({
               </div>
               <a
                 className="btn carrito-wa"
-                href={buildWhatsAppUrl(items, total)}
+                href={buildWhatsAppUrl(items, total, whatsapp)}
                 target="_blank"
                 rel="noreferrer"
               >

@@ -37,6 +37,31 @@ INSERT INTO galeria (imagen_url, titulo, orden) VALUES
   ('/images/maquillaje2.jpg', 'Look profesional', 5),
   ('/images/maquillaje3.jpg', 'Estilo editorial', 6);
 
+INSERT INTO contenido_sitio (clave, valor) VALUES
+  ('banner_tag', 'Belleza · Maquillaje · Cursos'),
+  ('banner_titulo', 'Consiente tu piel con AINÉ'),
+  ('banner_btn', 'Ver catálogo'),
+  ('quienes_somos_titulo', '¿Quiénes somos?'),
+  ('quienes_somos_texto', 'En nuestra tienda virtual contamos con variedad, precios especiales, productos nacionales e internacionales. Tenemos maquillaje para todos los gustos y necesidades. ¡Consiéntete!'),
+  ('galeria_titulo', 'Inspiración & looks'),
+  ('galeria_subtitulo', 'Descubre combinaciones y tendencias de nuestra comunidad AINÉ'),
+  ('cursos_titulo', 'Aprende Maquillaje con AINÉ'),
+  ('cursos_subtitulo', 'Descubre técnicas, tendencias y tips para resaltar tu belleza como toda una diosa'),
+  ('pagos_titulo', 'Formas de pago'),
+  ('pagos_subtitulo', 'Elige la opción que más te convenga. Pagos seguros y confirmación rápida.'),
+  ('pagos_nota', '¿Dudas con tu pago? Escríbenos por WhatsApp y te ayudamos al instante.'),
+  ('footer_titulo', 'Contáctanos'),
+  ('footer_whatsapp_texto', '311 259 9598'),
+  ('footer_whatsapp_url', 'https://wa.me/573112599598'),
+  ('footer_copy', '© AINÉ — Maquillaje, belleza y cursos'),
+  ('contacto_whatsapp', '573112599598')
+ON DUPLICATE KEY UPDATE valor = VALUES(valor);
+
+INSERT INTO redes_sociales (nombre, url, icono_url, orden) VALUES
+  ('Instagram', 'https://www.instagram.com/aleja.duque18?igsh=ZjV3M3oxZnA1aHp3', '/images/social/instagram.png', 1),
+  ('Facebook', 'https://www.facebook.com/share/16FZK6FQax/', '/images/social/facebook.png', 2),
+  ('WhatsApp', 'https://wa.me/573112599598', '/images/social/whatsapp.png', 3);
+
 INSERT INTO formas_pago (nombre, descripcion, icono_url, orden) VALUES
   ('Nequi', 'Paga al instante con tu celular.', '/images/pagos/nequi.svg', 1),
   ('Daviplata', 'Transferencia rápida desde Daviplata.', '/images/pagos/daviplata.svg', 2),

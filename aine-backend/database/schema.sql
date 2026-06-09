@@ -119,6 +119,31 @@ CREATE TABLE IF NOT EXISTS galeria (
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------------
+-- Contenido editable del sitio
+-- ---------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS contenido_sitio (
+  id         INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  clave      VARCHAR(80) NOT NULL UNIQUE,
+  valor      TEXT NOT NULL,
+  activo     TINYINT(1) NOT NULL DEFAULT 1,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------------------------
+-- Redes sociales
+-- ---------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS redes_sociales (
+  id         INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  nombre     VARCHAR(50) NOT NULL,
+  url        VARCHAR(255) NOT NULL,
+  icono_url  VARCHAR(255) NULL,
+  orden      INT UNSIGNED NOT NULL DEFAULT 0,
+  activo     TINYINT(1) NOT NULL DEFAULT 1,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------------------------
 -- Formas de pago
 -- ---------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS formas_pago (

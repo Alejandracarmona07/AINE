@@ -8,6 +8,8 @@ const { ListCourses } = require("./src/application/usecases/ListCourses");
 const { ListPaymentMethods } = require("./src/application/usecases/ListPaymentMethods");
 const { ListCategories } = require("./src/application/usecases/ListCategories");
 const { ListGallery } = require("./src/application/usecases/ListGallery");
+const { ListSiteContent } = require("./src/application/usecases/ListSiteContent");
+const { ListSocialNetworks } = require("./src/application/usecases/ListSocialNetworks");
 const { GetCatalog } = require("./src/application/usecases/GetCatalog");
 const { RegisterUser } = require("./src/application/usecases/RegisterUser");
 const { LoginUser } = require("./src/application/usecases/LoginUser");
@@ -20,6 +22,8 @@ const { MysqlCourseRepository } = require("./src/infrastructure/mysql/MysqlCours
 const { MysqlPaymentMethodRepository } = require("./src/infrastructure/mysql/MysqlPaymentMethodRepository");
 const { MysqlCategoryRepository } = require("./src/infrastructure/mysql/MysqlCategoryRepository");
 const { MysqlGalleryRepository } = require("./src/infrastructure/mysql/MysqlGalleryRepository");
+const { MysqlSiteContentRepository } = require("./src/infrastructure/mysql/MysqlSiteContentRepository");
+const { MysqlSocialNetworkRepository } = require("./src/infrastructure/mysql/MysqlSocialNetworkRepository");
 const { MysqlUserRepository } = require("./src/infrastructure/mysql/MysqlUserRepository");
 
 const pool = createMysqlPool(process.env);
@@ -31,18 +35,24 @@ const courseRepository = new MysqlCourseRepository({ pool });
 const paymentMethodRepository = new MysqlPaymentMethodRepository({ pool });
 const categoryRepository = new MysqlCategoryRepository({ pool });
 const galleryRepository = new MysqlGalleryRepository({ pool });
+const siteContentRepository = new MysqlSiteContentRepository({ pool });
+const socialNetworkRepository = new MysqlSocialNetworkRepository({ pool });
 const userRepository = new MysqlUserRepository({ pool });
 const listProducts = new ListProducts({ productRepository });
 const listCourses = new ListCourses({ courseRepository });
 const listPaymentMethods = new ListPaymentMethods({ paymentMethodRepository });
 const listCategories = new ListCategories({ categoryRepository });
 const listGallery = new ListGallery({ galleryRepository });
+const listSiteContent = new ListSiteContent({ siteContentRepository });
+const listSocialNetworks = new ListSocialNetworks({ socialNetworkRepository });
 const getCatalog = new GetCatalog({
   listProducts,
   listCourses,
   listPaymentMethods,
   listCategories,
   listGallery,
+  listSiteContent,
+  listSocialNetworks,
 });
 const registerUser = new RegisterUser({ userRepository, passwordHasher });
 const loginUser = new LoginUser({ userRepository, passwordHasher });

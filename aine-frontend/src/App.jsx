@@ -12,6 +12,8 @@ function App() {
   const [formasPago, setFormasPago] = useState([])
   const [categorias, setCategorias] = useState([])
   const [galeria, setGaleria] = useState([])
+  const [contenido, setContenido] = useState({})
+  const [redes, setRedes] = useState([])
   const [cargando, setCargando] = useState(true)
   const [error, setError] = useState(null)
 
@@ -26,6 +28,8 @@ function App() {
         setFormasPago(data.formasPago)
         setCategorias(data.categorias)
         setGaleria(data.galeria)
+        setContenido(data.contenido)
+        setRedes(data.redes)
       })
       .catch((err) =>
         setError(
@@ -132,30 +136,30 @@ function App() {
         onQuitar={cart.quitar}
         onCambiarCantidad={cart.cambiarCantidad}
         onVaciar={cart.vaciar}
+        whatsapp={contenido.contacto_whatsapp}
       />
 
       <main>
         <section className="banner" id="comprar">
           <div className="banner-content">
-            <p className="banner-tag">Belleza · Maquillaje · Cursos</p>
-            <h2 className="banner-title">Consiente tu piel con AINÉ</h2>
+            {contenido.banner_tag && <p className="banner-tag">{contenido.banner_tag}</p>}
+            {contenido.banner_titulo && <h2 className="banner-title">{contenido.banner_titulo}</h2>}
             <a href="#productos" className="btn banner-btn">
-              Ver catálogo
+              {contenido.banner_btn ?? 'Ver catálogo'}
             </a>
           </div>
         </section>
 
-        <section>
-          <h2>¿Quiénes somos?</h2>
-          <p className="text-base intro-text">
-            En nuestra tienda virtual contamos con variedad, precios especiales, productos nacionales e
-            internacionales. Tenemos maquillaje para todos los gustos y necesidades. ¡Consiéntete!
-          </p>
-        </section>
+        {contenido.quienes_somos_texto && (
+          <section>
+            <h2>{contenido.quienes_somos_titulo ?? '¿Quiénes somos?'}</h2>
+            <p className="text-base intro-text">{contenido.quienes_somos_texto}</p>
+          </section>
+        )}
 
         <section className="galeria-section">
-          <h2>Inspiración & looks</h2>
-          <p className="centrado galeria-sub">Descubre combinaciones y tendencias de nuestra comunidad AINÉ</p>
+          <h2>{contenido.galeria_titulo ?? 'Inspiración & looks'}</h2>
+          {contenido.galeria_subtitulo && <p className="centrado galeria-sub">{contenido.galeria_subtitulo}</p>}
           <div className="galeria-grid">
             {galeria.map((item) => (
               <figure key={item.id} className="galeria-item">
@@ -168,8 +172,8 @@ function App() {
 
         <section id="cursos" className="cursos-section">
           <div className="section-head">
-            <h2>Aprende Maquillaje con AINÉ</h2>
-            <p>Descubre técnicas, tendencias y tips para resaltar tu belleza como toda una diosa</p>
+            <h2>{contenido.cursos_titulo ?? 'Cursos'}</h2>
+            {contenido.cursos_subtitulo && <p>{contenido.cursos_subtitulo}</p>}
           </div>
           {cargando && <p className="centrado">Cargando cursos...</p>}
           <div className="cursos-grid">
@@ -263,8 +267,8 @@ function App() {
         </div>
 
         <section id="pagos" className="pagos-section">
-          <h2>Formas de pago</h2>
-          <p className="centrado pagos-sub">Elige la opción que más te convenga. Pagos seguros y confirmación rápida.</p>
+          <h2>{contenido.pagos_titulo ?? 'Formas de pago'}</h2>
+          {contenido.pagos_subtitulo && <p className="centrado pagos-sub">{contenido.pagos_subtitulo}</p>}
           <div className="pagos-grid">
             {formasPago.map((fp) => (
               <article key={fp.id} className="pago-card">
@@ -274,52 +278,53 @@ function App() {
               </article>
             ))}
           </div>
-          <p className="pagos-nota">
-            ¿Dudas con tu pago? Escríbenos por{' '}
-            <a href="https://wa.me/573112599598" target="_blank" rel="noreferrer">
-              WhatsApp
-            </a>{' '}
-            y te ayudamos al instante.
-          </p>
+          {contenido.pagos_nota && (
+            <p className="pagos-nota">
+              {contenido.pagos_nota.includes('WhatsApp') ? (
+                <>
+                  {contenido.pagos_nota.split('WhatsApp')[0]}
+                  {contenido.footer_whatsapp_url ? (
+                    <a href={contenido.footer_whatsapp_url} target="_blank" rel="noreferrer">
+                      WhatsApp
+                    </a>
+                  ) : (
+                    'WhatsApp'
+                  )}
+                  {contenido.pagos_nota.split('WhatsApp')[1]}
+                </>
+              ) : (
+                contenido.pagos_nota
+              )}
+            </p>
+          )}
         </section>
       </main>
 
       <footer className="site-footer">
-        <h3 className="font-semibold">Contáctanos</h3>
-        <span className="contactanos">
-          WhatsApp:{' '}
-          <a className="underline" href="https://wa.me/573112599598" target="_blank" rel="noreferrer">
-            311 259 9598
-          </a>
-        </span>
-        <p className="footer-copy">© AINÉ — Maquillaje, belleza y cursos</p>
+        <h3 className="font-semibold">{contenido.footer_titulo ?? 'Contáctanos'}</h3>
+        {contenido.footer_whatsapp_url && (
+          <span className="contactanos">
+            WhatsApp:{' '}
+            <a className="underline" href={contenido.footer_whatsapp_url} target="_blank" rel="noreferrer">
+              {contenido.footer_whatsapp_texto ?? contenido.contacto_whatsapp}
+            </a>
+          </span>
+        )}
+        {contenido.footer_copy && <p className="footer-copy">{contenido.footer_copy}</p>}
       </footer>
 
       <aside className="social-float" aria-label="Redes sociales">
-        <a
-          href="https://www.instagram.com/aleja.duque18?igsh=ZjV3M3oxZnA1aHp3"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Instagram"
-        >
-          <img src="/images/social/instagram.png" alt="" />
-        </a>
-        <a
-          href="https://www.facebook.com/share/16FZK6FQax/"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Facebook"
-        >
-          <img src="/images/social/facebook.png" alt="" />
-        </a>
-        <a
-          href="https://wa.me/573112599598"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="WhatsApp"
-        >
-          <img src="/images/social/whatsapp.png" alt="" />
-        </a>
+        {redes.map((red) => (
+          <a
+            key={red.id}
+            href={red.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={red.nombre}
+          >
+            <img src={red.icono} alt="" />
+          </a>
+        ))}
       </aside>
 
       <PWABadge />

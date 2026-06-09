@@ -29,6 +29,8 @@ export async function fetchCatalogo() {
     formasPago: data.formasPago ?? [],
     categorias: data.categorias ?? [],
     galeria: data.galeria ?? [],
+    contenido: data.contenido ?? {},
+    redes: data.redes ?? [],
   }
 }
 
