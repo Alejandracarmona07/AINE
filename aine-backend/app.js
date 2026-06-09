@@ -16,6 +16,11 @@ const { LoginUser } = require("./src/application/usecases/LoginUser");
 const { ListBlogTips } = require("./src/application/usecases/ListBlogTips");
 const { ListCommunityComments } = require("./src/application/usecases/ListCommunityComments");
 const { CreateCommunityComment } = require("./src/application/usecases/CreateCommunityComment");
+const { CreateStripeCheckout } = require("./src/application/usecases/CreateStripeCheckout");
+const { HandleStripeWebhook } = require("./src/application/usecases/HandleStripeWebhook");
+const { GetStripePaymentStatus } = require("./src/application/usecases/GetStripePaymentStatus");
+const { createStripeClient } = require("./src/infrastructure/stripe/createStripeClient");
+const { MysqlStripePaymentRepository } = require("./src/infrastructure/mysql/MysqlStripePaymentRepository");
 const { createApp } = require("./src/infrastructure/http/app");
 const { ScryptPasswordHasher } = require("./src/infrastructure/crypto/ScryptPasswordHasher");
 const { createMysqlPool } = require("./src/infrastructure/mysql/pool");
@@ -66,6 +71,19 @@ const loginUser = new LoginUser({ userRepository, passwordHasher });
 const listBlogTips = new ListBlogTips({ blogTipRepository });
 const listCommunityComments = new ListCommunityComments({ communityCommentRepository });
 const createCommunityComment = new CreateCommunityComment({ communityCommentRepository, userRepository });
+const stripePaymentRepository = new MysqlStripePaymentRepository({ pool });
+const stripe = createStripeClient(process.env.STRIPE_SECRET_KEY);
+const createStripeCheckout = new CreateStripeCheckout({
+  stripe,
+  stripePaymentRepository,
+  frontendUrl: process.env.FRONTEND_URL,
+});
+const handleStripeWebhook = new HandleStripeWebhook({
+  stripe,
+  webhookSecret: process.env.STRIPE_WEBHOOK_SECRET,
+  stripePaymentRepository,
+});
+const getStripePaymentStatus = new GetStripePaymentStatus({ stripePaymentRepository });
 
 const app = createApp({
   checkDatabaseHealth,
@@ -80,6 +98,10 @@ const app = createApp({
   listBlogTips,
   listCommunityComments,
   createCommunityComment,
+  createStripeCheckout,
+  handleStripeWebhook,
+  getStripePaymentStatus,
+  stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
 });
 
 module.exports = app;

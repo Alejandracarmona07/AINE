@@ -9,6 +9,9 @@ export default function Carrito({
   onCambiarCantidad,
   onVaciar,
   whatsapp = '573112599598',
+  stripeEnabled = false,
+  stripeCargando = false,
+  onPagarStripe,
 }) {
   if (!abierto) return null
 
@@ -79,6 +82,16 @@ export default function Carrito({
                 <span>Total</span>
                 <strong>${total.toLocaleString('es-CO')} COP</strong>
               </div>
+              {stripeEnabled && (
+                <button
+                  type="button"
+                  className="btn carrito-stripe"
+                  onClick={onPagarStripe}
+                  disabled={stripeCargando}
+                >
+                  {stripeCargando ? 'Redirigiendo a Stripe...' : '💳 Pagar con Stripe'}
+                </button>
+              )}
               <a
                 className="btn carrito-wa"
                 href={buildWhatsAppUrl(items, total, whatsapp)}

@@ -10,6 +10,8 @@ const MIGRATIONS = [
   "005_rutas_imagenes_catalogo.sql",
   "006_fix_pagos_y_cursos.sql",
   "007_blog_comunidad.sql",
+  "008_stripe_pagos.sql",
+  "009_quitar_nequi_daviplata_bancolombia.sql",
 ];
 
 async function createConnection() {
@@ -58,6 +60,7 @@ async function main() {
     "usuarios",
     "blog_tips",
     "comunidad_comentarios",
+    "pagos_stripe",
   ];
 
   console.log("\nResumen Clever Cloud:");

@@ -5,7 +5,7 @@ class MysqlPaymentMethodRepository {
 
   async findAllActive() {
     const [rows] = await this.pool.query(
-      `SELECT id, nombre, descripcion, icono_url AS icono
+      `SELECT id, nombre, descripcion, icono_url AS icono, es_stripe AS esStripe
        FROM formas_pago
        WHERE activo = 1
        ORDER BY orden ASC, nombre ASC`,
@@ -15,6 +15,7 @@ class MysqlPaymentMethodRepository {
       nombre: row.nombre,
       descripcion: row.descripcion,
       icono: row.icono,
+      esStripe: Boolean(row.esStripe),
     }));
   }
 }

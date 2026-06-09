@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react'
 import AuthModal from './components/AuthModal.jsx'
 import BlogComunidad from './components/BlogComunidad.jsx'
+import CarruselHorizontal from './components/CarruselHorizontal.jsx'
 import Carrito from './components/Carrito.jsx'
 import { useAuth } from './hooks/useAuth.js'
 import { useCart } from './hooks/useCart.js'
+import { useStripeCheckout } from './hooks/useStripeCheckout.js'
 import PWABadge from './PWABadge.jsx'
-import { fetchCatalogo } from './services/api.js'
+import { fetchCatalogo, fetchPagoEstado } from './services/api.js'
 
 function App() {
   const [productos, setProductos] = useState([])
@@ -17,9 +19,18 @@ function App() {
   const [redes, setRedes] = useState([])
   const [cargando, setCargando] = useState(true)
   const [error, setError] = useState(null)
+  const [pagoMensaje, setPagoMensaje] = useState(null)
 
   const cart = useCart()
   const auth = useAuth()
+  const stripe = useStripeCheckout({
+    items: cart.items,
+    usuario: auth.usuario,
+    onError: setPagoMensaje,
+  })
+
+  const pagosStripe = formasPago.filter((fp) => fp.esStripe)
+  const pagosManuales = formasPago.filter((fp) => !fp.esStripe)
 
   useEffect(() => {
     fetchCatalogo()
@@ -40,6 +51,37 @@ function App() {
         ),
       )
       .finally(() => setCargando(false))
+  }, [])
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const pago = params.get('pago')
+    const sessionId = params.get('session_id')
+
+    if (pago === 'cancelado') {
+      setPagoMensaje('Pago cancelado. Tu carrito sigue disponible.')
+      window.history.replaceState({}, '', window.location.pathname)
+      return
+    }
+
+    if (pago === 'exitoso' && sessionId) {
+      fetchPagoEstado(sessionId)
+        .then((data) => {
+          setPagoMensaje(
+            `¡Pago confirmado! Total: $${Number(data.pago.total).toLocaleString('es-CO')} COP. Gracias por tu compra en AINÉ.`,
+          )
+          cart.vaciar()
+        })
+        .catch(() => {
+          setPagoMensaje('Pago recibido. Te contactaremos para confirmar tu pedido.')
+          cart.vaciar()
+        })
+        .finally(() => {
+          window.history.replaceState({}, '', window.location.pathname)
+        })
+    }
+    // Solo al volver de Stripe (query ?pago=)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   function agregarProducto(p) {
@@ -124,6 +166,14 @@ function App() {
 </header>
 
       {cart.toast && <div className="cart-toast">{cart.toast}</div>}
+      {pagoMensaje && (
+        <div className={`pago-toast${pagoMensaje.includes('confirmado') ? ' pago-toast-ok' : ''}`}>
+          {pagoMensaje}
+          <button type="button" className="pago-toast-cerrar" onClick={() => setPagoMensaje(null)}>
+            ✕
+          </button>
+        </div>
+      )}
 
       <AuthModal
         abierto={auth.abierto}
@@ -146,38 +196,12 @@ function App() {
         onCambiarCantidad={cart.cambiarCantidad}
         onVaciar={cart.vaciar}
         whatsapp={contenido.contacto_whatsapp}
+        stripeEnabled={stripe.stripeEnabled}
+        stripeCargando={stripe.cargando}
+        onPagarStripe={stripe.iniciarPago}
       />
 
       <main>
-        <section className="auth-section">
-          <div className="auth-card">
-            <h2>Únete a AINÉ</h2>
-            {auth.usuario ? (
-              <p>
-                Ya estás conectada como <strong>{auth.usuario.nombre}</strong>. Explora el catálogo y arma tu pedido.
-              </p>
-            ) : (
-              <p>Crea tu cuenta para guardar favoritos y recibir ofertas exclusivas.</p>
-            )}
-            <div className="auth-actions">
-              {auth.usuario ? (
-                <button type="button" className="btn btn-outline" onClick={auth.logout}>
-                  Cerrar sesión
-                </button>
-              ) : (
-                <>
-                  <button type="button" className="btn" onClick={() => auth.abrir('registro')}>
-                    Registrarse
-                  </button>
-                  <button type="button" className="btn btn-outline" onClick={() => auth.abrir('login')}>
-                    Iniciar sesión
-                  </button>
-                </>
-              )}
-            </div>
-          </div>
-        </section>
-        
         <section className="banner" id="comprar">
           <div className="banner-content">
             {contenido.banner_tag && <p className="banner-tag">{contenido.banner_tag}</p>}
@@ -283,20 +307,32 @@ function App() {
 
         
 
-        <div id="productos">
+        <div id="productos" className="productos-catalogo">
           {cargando && <p className="centrado">Cargando productos...</p>}
           {error && <p className="centrado error-msg">{error}</p>}
 
-          {categorias.map((cat) => {
+          {[...categorias]
+            .sort((a, b) => {
+              const orden = ['Bases', 'Labiales', 'Pestañinas', 'Rubores']
+              return orden.indexOf(a.nombre) - orden.indexOf(b.nombre)
+            })
+            .map((cat) => {
             const items = productos.filter((p) => p.categoria === cat.nombre)
             if (!items.length && !cargando) return null
             return (
               <article key={cat.id} className="categoria-section">
-                <h2>{cat.nombre}</h2>
-                {cat.descripcion && <p className="centrado">{cat.descripcion}</p>}
-                <div className="categoria" id={`categoria-${cat.nombre}`}>
+                <div className="categoria-head">
+                  <div>
+                    <h2>{cat.nombre}</h2>
+                    {cat.descripcion && <p className="categoria-desc">{cat.descripcion}</p>}
+                  </div>
+                </div>
+                <CarruselHorizontal
+                  id={`categoria-${cat.nombre}`}
+                  ariaLabel={`Catálogo ${cat.nombre}`}
+                >
                   {items.map((p) => (
-                    <div key={p.id} className="producto">
+                    <div key={p.id} className="producto producto-carrusel">
                       <div className="producto-img-wrap">
                         <img src={p.imagen} alt={p.nombre} loading="lazy" />
                         <span className="producto-cat">{p.categoria}</span>
@@ -314,7 +350,7 @@ function App() {
                       </div>
                     </div>
                   ))}
-                </div>
+                </CarruselHorizontal>
               </article>
             )
           })}
@@ -323,15 +359,76 @@ function App() {
         <section id="pagos" className="pagos-section">
           <h2>{contenido.pagos_titulo ?? 'Formas de pago'}</h2>
           {contenido.pagos_subtitulo && <p className="centrado pagos-sub">{contenido.pagos_subtitulo}</p>}
-          <div className="pagos-grid">
-            {formasPago.map((fp) => (
-              <article key={fp.id} className="pago-card">
-                <img src={fp.icono} alt={fp.nombre} className="pago-icono" />
-                <h3>{fp.nombre}</h3>
-                <p>{fp.descripcion}</p>
-              </article>
-            ))}
-          </div>
+
+          {pagosStripe.length > 0 && (
+            <div className="pagos-bloque">
+              <h3 className="pagos-bloque-titulo">
+                {contenido.pagos_stripe_titulo ?? 'Pago en línea seguro'}
+              </h3>
+              {contenido.pagos_stripe_subtitulo && (
+                <p className="pagos-bloque-sub">{contenido.pagos_stripe_subtitulo}</p>
+              )}
+              <div className="pagos-grid pagos-grid-stripe">
+                {pagosStripe.map((fp) => (
+                  <article key={fp.id} className="pago-card pago-card-stripe">
+                    <img src={fp.icono} alt={fp.nombre} className="pago-icono" />
+                    <h3>{fp.nombre}</h3>
+                    <p>{fp.descripcion}</p>
+                    <span className="pago-stripe-badge">Stripe</span>
+                    {stripe.stripeEnabled ? (
+                      <button
+                        type="button"
+                        className="btn btn-sm pago-stripe-btn"
+                        onClick={() => {
+                          if (!cart.items.length) {
+                            setPagoMensaje('Agrega productos al carrito y vuelve aquí para pagar.')
+                            cart.setAbierto(true)
+                            return
+                          }
+                          stripe.iniciarPago()
+                        }}
+                        disabled={stripe.cargando}
+                      >
+                        {stripe.cargando ? 'Abriendo...' : 'Pagar ahora'}
+                      </button>
+                    ) : (
+                      <p className="pago-stripe-pendiente">Configura Stripe en el backend</p>
+                    )}
+                  </article>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {pagosManuales.length > 0 && (
+            <div className="pagos-bloque">
+              <h3 className="pagos-bloque-titulo">
+                {contenido.pagos_manual_titulo ?? 'Otros medios de pago'}
+              </h3>
+              {contenido.pagos_manual_subtitulo && (
+                <p className="pagos-bloque-sub">{contenido.pagos_manual_subtitulo}</p>
+              )}
+              <div className="pagos-grid">
+                {pagosManuales.map((fp) => (
+                  <article key={fp.id} className="pago-card">
+                    <img src={fp.icono} alt={fp.nombre} className="pago-icono" />
+                    <h3>{fp.nombre}</h3>
+                    <p>{fp.descripcion}</p>
+                    {contenido.footer_whatsapp_url && (
+                      <a
+                        className="btn btn-sm btn-secondary pago-wa-btn"
+                        href={contenido.footer_whatsapp_url}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        Coordinar por WhatsApp
+                      </a>
+                    )}
+                  </article>
+                ))}
+              </div>
+            </div>
+          )}
           {contenido.pagos_nota && (
             <p className="pagos-nota">
               {contenido.pagos_nota.includes('WhatsApp') ? (

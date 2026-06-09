@@ -14,13 +14,10 @@ CREATE TABLE IF NOT EXISTS formas_pago (
 INSERT INTO formas_pago (nombre, descripcion, icono_url, orden)
 SELECT v.nombre, v.descripcion, v.icono_url, v.orden
 FROM (
-  SELECT 'Nequi' AS nombre, 'Paga al instante con tu celular.' AS descripcion, '/images/pagos/nequi.svg' AS icono_url, 1 AS orden
-  UNION ALL SELECT 'Daviplata', 'Transferencia rápida desde Daviplata.', '/images/pagos/daviplata.svg', 2
-  UNION ALL SELECT 'Bancolombia', 'Transferencia a cuenta de ahorros o corriente.', '/images/pagos/bancolombia.svg', 3
-  UNION ALL SELECT 'PSE', 'Débito desde tu banco en línea.', '/images/pagos/pse.svg', 4
-  UNION ALL SELECT 'Tarjeta', 'Crédito o débito Visa / Mastercard.', '/images/pagos/tarjeta.svg', 5
-  UNION ALL SELECT 'Efectivo', 'Pago contra entrega en Medellín y área metropolitana.', '/images/pagos/efectivo.svg', 6
-  UNION ALL SELECT 'WhatsApp', 'Coordina tu pedido y pago por chat.', '/images/pagos/whatsapp.svg', 7
+  SELECT 'PSE' AS nombre, 'Débito desde tu banco en línea.' AS descripcion, '/images/pagos/pse.svg' AS icono_url, 1 AS orden
+  UNION ALL SELECT 'Tarjeta', 'Crédito o débito Visa / Mastercard.', '/images/pagos/tarjeta.svg', 2
+  UNION ALL SELECT 'Efectivo', 'Pago contra entrega en Medellín y área metropolitana.', '/images/pagos/efectivo.svg', 3
+  UNION ALL SELECT 'WhatsApp', 'Coordina tu pedido y pago por chat.', '/images/pagos/whatsapp.svg', 4
 ) AS v
 WHERE NOT EXISTS (SELECT 1 FROM formas_pago fp WHERE fp.nombre = v.nombre);
 

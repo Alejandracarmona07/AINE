@@ -14,10 +14,32 @@ function createApp({
   listBlogTips,
   listCommunityComments,
   createCommunityComment,
+  createStripeCheckout,
+  handleStripeWebhook,
+  getStripePaymentStatus,
+  stripePublishableKey,
 }) {
   const app = express();
 
   app.use(cors());
+
+  app.post(
+    "/api/pagos/webhook",
+    express.raw({ type: "application/json" }),
+    async (req, res) => {
+      try {
+        const result = await handleStripeWebhook.execute({
+          rawBody: req.body,
+          signature: req.headers["stripe-signature"],
+        });
+        res.json(result);
+      } catch (err) {
+        const status = err.code === "stripe_not_configured" ? 503 : 400;
+        res.status(status).json({ error: err.code ?? "webhook_failed", message: err?.message });
+      }
+    },
+  );
+
   app.use(express.json());
 
   app.get("/", (_req, res) => {
@@ -137,6 +159,39 @@ function createApp({
       const status =
         err.code === "validation_error" ? 400 : err.code === "auth_required" ? 401 : 500;
       res.status(status).json({ error: err.code ?? "comment_create_failed", message: err?.message });
+    }
+  });
+
+  app.get("/api/pagos/config", (_req, res) => {
+    res.json({
+      stripeEnabled: Boolean(stripePublishableKey),
+      publishableKey: stripePublishableKey ?? null,
+    });
+  });
+
+  app.post("/api/pagos/checkout", async (req, res) => {
+    try {
+      const { items, email, usuarioId } = req.body ?? {};
+      const checkout = await createStripeCheckout.execute({ items, email, usuarioId });
+      res.json(checkout);
+    } catch (err) {
+      const status =
+        err.code === "validation_error"
+          ? 400
+          : err.code === "stripe_not_configured"
+            ? 503
+            : 500;
+      res.status(status).json({ error: err.code ?? "checkout_failed", message: err?.message });
+    }
+  });
+
+  app.get("/api/pagos/estado/:sessionId", async (req, res) => {
+    try {
+      const pago = await getStripePaymentStatus.execute({ sessionId: req.params.sessionId });
+      res.json({ pago });
+    } catch (err) {
+      const status = err.code === "not_found" ? 404 : err.code === "validation_error" ? 400 : 500;
+      res.status(status).json({ error: err.code ?? "payment_status_failed", message: err?.message });
     }
   });
 

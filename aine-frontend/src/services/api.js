@@ -69,3 +69,15 @@ export async function crearComentarioBlog(payload) {
   const data = await apiPost('/api/blog/comentarios', payload)
   return data.comentario
 }
+
+export function fetchPagosConfig() {
+  return apiGet('/api/pagos/config')
+}
+
+export function crearStripeCheckout(payload) {
+  return apiPost('/api/pagos/checkout', payload)
+}
+
+export function fetchPagoEstado(sessionId) {
+  return apiGet(`/api/pagos/estado/${encodeURIComponent(sessionId)}`)
+}
