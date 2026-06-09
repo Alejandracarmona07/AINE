@@ -8,6 +8,7 @@ const { ListCourses } = require("./src/application/usecases/ListCourses");
 const { ListPaymentMethods } = require("./src/application/usecases/ListPaymentMethods");
 const { ListCategories } = require("./src/application/usecases/ListCategories");
 const { ListGallery } = require("./src/application/usecases/ListGallery");
+const { GetCatalog } = require("./src/application/usecases/GetCatalog");
 const { RegisterUser } = require("./src/application/usecases/RegisterUser");
 const { LoginUser } = require("./src/application/usecases/LoginUser");
 const { createApp } = require("./src/infrastructure/http/app");
@@ -36,6 +37,13 @@ const listCourses = new ListCourses({ courseRepository });
 const listPaymentMethods = new ListPaymentMethods({ paymentMethodRepository });
 const listCategories = new ListCategories({ categoryRepository });
 const listGallery = new ListGallery({ galleryRepository });
+const getCatalog = new GetCatalog({
+  listProducts,
+  listCourses,
+  listPaymentMethods,
+  listCategories,
+  listGallery,
+});
 const registerUser = new RegisterUser({ userRepository, passwordHasher });
 const loginUser = new LoginUser({ userRepository, passwordHasher });
 
@@ -46,6 +54,7 @@ const app = createApp({
   listPaymentMethods,
   listCategories,
   listGallery,
+  getCatalog,
   registerUser,
   loginUser,
 });

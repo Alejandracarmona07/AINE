@@ -21,20 +21,14 @@ async function apiPost(path, body) {
 }
 
 export async function fetchCatalogo() {
-  const [prodData, cursoData, pagoData, catData, galData] = await Promise.all([
-    apiGet('/api/productos'),
-    apiGet('/api/cursos'),
-    apiGet('/api/formas-pago'),
-    apiGet('/api/categorias'),
-    apiGet('/api/galeria'),
-  ])
+  const data = await apiGet('/api/catalogo')
 
   return {
-    productos: prodData.productos ?? [],
-    cursos: cursoData.cursos ?? [],
-    formasPago: pagoData.formasPago ?? [],
-    categorias: catData.categorias ?? [],
-    galeria: galData.galeria ?? [],
+    productos: data.productos ?? [],
+    cursos: data.cursos ?? [],
+    formasPago: data.formasPago ?? [],
+    categorias: data.categorias ?? [],
+    galeria: data.galeria ?? [],
   }
 }
 

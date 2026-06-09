@@ -27,7 +27,13 @@ function App() {
         setCategorias(data.categorias)
         setGaleria(data.galeria)
       })
-      .catch(() => setError('No se pudo cargar el catálogo. Verifica que el backend esté activo.'))
+      .catch((err) =>
+        setError(
+          err?.message
+            ? `No se pudo cargar el catálogo: ${err.message}`
+            : 'No se pudo cargar el catálogo. Verifica que el backend esté activo.',
+        ),
+      )
       .finally(() => setCargando(false))
   }, [])
 

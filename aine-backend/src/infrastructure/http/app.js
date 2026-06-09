@@ -8,6 +8,7 @@ function createApp({
   listPaymentMethods,
   listCategories,
   listGallery,
+  getCatalog,
   registerUser,
   loginUser,
 }) {
@@ -26,6 +27,15 @@ function createApp({
       res.status(ok ? 200 : 500).json({ ok });
     } catch (err) {
       res.status(500).json({ ok: false, error: "db_health_failed", message: err?.message });
+    }
+  });
+
+  app.get("/api/catalogo", async (_req, res) => {
+    try {
+      const catalogo = await getCatalog.execute();
+      res.json(catalogo);
+    } catch (err) {
+      res.status(500).json({ error: "catalog_fetch_failed", message: err?.message });
     }
   });
 

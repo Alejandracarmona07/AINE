@@ -23,11 +23,14 @@ function createMysqlPool(env = process.env) {
     );
   }
 
+  const isServerless = Boolean(env.VERCEL);
+
   return mysql.createPool({
     ...cfg,
     waitForConnections: true,
-    connectionLimit: 10,
+    connectionLimit: isServerless ? 1 : 10,
     queueLimit: 0,
+    idleTimeout: isServerless ? 10_000 : 60_000,
   });
 }
 
