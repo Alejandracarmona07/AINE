@@ -29,15 +29,13 @@ class GetCatalog {
   }
 
   async execute() {
-    const [productos, cursos, formasPago, categorias, galeria, contenido, redes] = await Promise.all([
-      this.listProducts.execute(),
-      this.listCourses.execute(),
-      this.listPaymentMethods.execute(),
-      this.listCategories.execute(),
-      this.listGallery.execute(),
-      this.listSiteContent.execute(),
-      this.listSocialNetworks.execute(),
-    ]);
+    const productos = await this.listProducts.execute();
+    const cursos = await this.listCourses.execute();
+    const formasPago = await this.listPaymentMethods.execute();
+    const categorias = await this.listCategories.execute();
+    const galeria = await this.listGallery.execute();
+    const contenido = await this.listSiteContent.execute();
+    const redes = await this.listSocialNetworks.execute();
 
     return { productos, cursos, formasPago, categorias, galeria, contenido, redes };
   }

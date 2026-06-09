@@ -1,5 +1,7 @@
 const mysql = require("mysql2/promise");
 
+let cachedPool;
+
 function getMysqlConfigFromEnv(env) {
   if (env.MYSQL_ADDON_URI) return { uri: env.MYSQL_ADDON_URI };
 
@@ -13,9 +15,23 @@ function getMysqlConfigFromEnv(env) {
 }
 
 function createMysqlPool(env = process.env) {
-  const cfg = getMysqlConfigFromEnv(env);
+  if (cachedPool) return cachedPool;
 
-  if (cfg.uri) return mysql.createPool(cfg.uri);
+  const cfg = getMysqlConfigFromEnv(env);
+  const isServerless = Boolean(env.VERCEL);
+
+  if (cfg.uri) {
+    cachedPool = mysql.createPool({
+      uri: cfg.uri,
+      waitForConnections: true,
+      connectionLimit: isServerless ? 1 : 5,
+      maxIdle: isServerless ? 0 : 5,
+      idleTimeout: isServerless ? 5_000 : 60_000,
+      queueLimit: 0,
+      enableKeepAlive: false,
+    });
+    return cachedPool;
+  }
 
   if (!cfg.host || !cfg.user || !cfg.database) {
     throw new Error(
@@ -23,16 +39,17 @@ function createMysqlPool(env = process.env) {
     );
   }
 
-  const isServerless = Boolean(env.VERCEL);
-
-  return mysql.createPool({
+  cachedPool = mysql.createPool({
     ...cfg,
     waitForConnections: true,
-    connectionLimit: isServerless ? 1 : 10,
+    connectionLimit: isServerless ? 1 : 5,
+    maxIdle: isServerless ? 0 : 5,
+    idleTimeout: isServerless ? 5_000 : 60_000,
     queueLimit: 0,
-    idleTimeout: isServerless ? 10_000 : 60_000,
+    enableKeepAlive: false,
   });
+
+  return cachedPool;
 }
 
 module.exports = { createMysqlPool };
-

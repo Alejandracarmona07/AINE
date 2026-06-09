@@ -1,12 +1,20 @@
 import { apiUrl } from '../config/api.js'
 
 async function apiGet(path) {
-  const res = await fetch(apiUrl(path))
+  let res
+  try {
+    res = await fetch(apiUrl(path))
+  } catch {
+    throw new Error(
+      'No se pudo conectar con el backend. Inicia el servidor: cd aine-backend && npm run dev',
+    )
+  }
+
+  const data = await res.json().catch(() => ({}))
   if (!res.ok) {
-    const data = await res.json().catch(() => ({}))
     throw new Error(data.message ?? `Error al consultar ${path}`)
   }
-  return res.json()
+  return data
 }
 
 async function apiPost(path, body) {
