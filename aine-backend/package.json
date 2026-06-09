@@ -27,7 +27,7 @@
   "license": "Apache-2.0",
   "author": "Alejandra Duque",
   "type": "commonjs",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "dev": "node --watch index.js",
     "start": "node index.js",
