@@ -6,6 +6,17 @@ class MysqlUserRepository {
     this.pool = pool;
   }
 
+  async findById(id) {
+    const [rows] = await this.pool.query(
+      `SELECT id, nombre, email, telefono, rol, activo
+       FROM usuarios
+       WHERE id = ?
+       LIMIT 1`,
+      [id],
+    );
+    return rows[0] ?? null;
+  }
+
   async findByEmail(email) {
     const [rows] = await this.pool.query(
       `SELECT id, nombre, email, password_hash, telefono, rol, activo

@@ -13,6 +13,9 @@ const { ListSocialNetworks } = require("./src/application/usecases/ListSocialNet
 const { GetCatalog } = require("./src/application/usecases/GetCatalog");
 const { RegisterUser } = require("./src/application/usecases/RegisterUser");
 const { LoginUser } = require("./src/application/usecases/LoginUser");
+const { ListBlogTips } = require("./src/application/usecases/ListBlogTips");
+const { ListCommunityComments } = require("./src/application/usecases/ListCommunityComments");
+const { CreateCommunityComment } = require("./src/application/usecases/CreateCommunityComment");
 const { createApp } = require("./src/infrastructure/http/app");
 const { ScryptPasswordHasher } = require("./src/infrastructure/crypto/ScryptPasswordHasher");
 const { createMysqlPool } = require("./src/infrastructure/mysql/pool");
@@ -25,6 +28,8 @@ const { MysqlGalleryRepository } = require("./src/infrastructure/mysql/MysqlGall
 const { MysqlSiteContentRepository } = require("./src/infrastructure/mysql/MysqlSiteContentRepository");
 const { MysqlSocialNetworkRepository } = require("./src/infrastructure/mysql/MysqlSocialNetworkRepository");
 const { MysqlUserRepository } = require("./src/infrastructure/mysql/MysqlUserRepository");
+const { MysqlBlogTipRepository } = require("./src/infrastructure/mysql/MysqlBlogTipRepository");
+const { MysqlCommunityCommentRepository } = require("./src/infrastructure/mysql/MysqlCommunityCommentRepository");
 
 const pool = createMysqlPool(process.env);
 const passwordHasher = new ScryptPasswordHasher();
@@ -54,8 +59,13 @@ const getCatalog = new GetCatalog({
   listSiteContent,
   listSocialNetworks,
 });
+const blogTipRepository = new MysqlBlogTipRepository({ pool });
+const communityCommentRepository = new MysqlCommunityCommentRepository({ pool });
 const registerUser = new RegisterUser({ userRepository, passwordHasher });
 const loginUser = new LoginUser({ userRepository, passwordHasher });
+const listBlogTips = new ListBlogTips({ blogTipRepository });
+const listCommunityComments = new ListCommunityComments({ communityCommentRepository });
+const createCommunityComment = new CreateCommunityComment({ communityCommentRepository, userRepository });
 
 const app = createApp({
   checkDatabaseHealth,
@@ -67,6 +77,9 @@ const app = createApp({
   getCatalog,
   registerUser,
   loginUser,
+  listBlogTips,
+  listCommunityComments,
+  createCommunityComment,
 });
 
 module.exports = app;

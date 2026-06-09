@@ -271,6 +271,100 @@ a.nav-link:hover,
   line-height: 1.7;
 }
 
+/* ─── Quiénes somos ──────────────────────────────────────── */
+.quienes-section {
+  margin: 0;
+}
+
+.quienes-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, #fff 0%, #fff8fc 100%);
+  border-radius: var(--border-radius);
+  box-shadow: 0 12px 40px rgba(214, 51, 108, 0.14);
+  border: 1px solid #f5d0e4;
+}
+
+.quienes-intro {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.quienes-eyebrow {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-acento);
+  margin-bottom: -0.25rem;
+}
+
+.quienes-intro h2 {
+  margin: 0;
+  padding: 0;
+  border: none;
+  font-size: 1.85rem;
+  line-height: 1.2;
+  color: #2d1020;
+}
+
+.quienes-texto {
+  margin: 0;
+  font-size: 1.02rem;
+  line-height: 1.75;
+  color: #555;
+  max-width: 52ch;
+}
+
+.quienes-highlights {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+}
+
+.quienes-highlights li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding: 0.75rem;
+  background: var(--color-suave);
+  border-radius: 10px;
+  border: 1px solid #f5d8e8;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.quienes-highlights li:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(214, 51, 108, 0.1);
+}
+
+.quienes-icon {
+  font-size: 1.15rem;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.quienes-highlights strong {
+  display: block;
+  font-size: 0.88rem;
+  color: #2d1020;
+  margin-bottom: 0.1rem;
+}
+
+.quienes-highlights li span:not(.quienes-icon) {
+  font-size: 0.78rem;
+  color: #777;
+  line-height: 1.35;
+}
+
 /* ─── Galería ────────────────────────────────────────────── */
 .galeria-section {
   background: #fff;
@@ -319,6 +413,327 @@ a.nav-link:hover,
   color: #fff;
   padding: 1.5rem 0.75rem 0.5rem;
   font-size: 0.85rem;
+}
+
+/* ─── Blog / Comunidad ───────────────────────────────────── */
+.blog-section {
+  background: linear-gradient(135deg, #fff8fc, #ffe8f4);
+  padding: 2rem 1.5rem;
+  border-radius: var(--border-radius);
+  border: 1px solid #f5d0e4;
+}
+
+.blog-sub {
+  color: #666;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.blog-tabs {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin: 1.25rem 0 1.5rem;
+  flex-wrap: wrap;
+}
+
+.blog-tab {
+  padding: 0.6rem 1.25rem;
+  border: 2px solid #f0c4dc;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--color-texto);
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.blog-tab.activa {
+  background: var(--color-acento);
+  border-color: var(--color-acento);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(214, 51, 108, 0.25);
+}
+
+.blog-login-hint {
+  text-align: center;
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+.blog-link-btn {
+  background: none;
+  border: none;
+  color: var(--color-acento);
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+  font: inherit;
+}
+
+.blog-ok {
+  color: #2b8a3e;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.blog-tips-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+
+.blog-tip-card {
+  background: #fff;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(214, 51, 108, 0.1);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.25s ease;
+}
+
+.blog-tip-card:hover {
+  transform: translateY(-3px);
+}
+
+.blog-tip-card.abierto {
+  grid-column: 1 / -1;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.blog-tip-media {
+  position: relative;
+  height: 160px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.blog-tip-card.abierto .blog-tip-media {
+  width: min(320px, 100%);
+  height: 200px;
+}
+
+.blog-tip-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.blog-etiqueta {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: var(--color-secundario);
+  color: #fff;
+  font-size: 0.7rem;
+  padding: 4px 10px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.blog-tip-body {
+  padding: 1rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.blog-tip-body h3 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.blog-tip-resumen {
+  font-size: 0.9rem;
+  color: #555;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.blog-tip-contenido {
+  font-size: 0.92rem;
+  color: #444;
+  margin: 0;
+  line-height: 1.6;
+  padding: 0.75rem;
+  background: var(--color-suave);
+  border-radius: 8px;
+  border-left: 3px solid var(--color-acento);
+}
+
+.blog-tip-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: auto;
+  flex-wrap: wrap;
+}
+
+.blog-comentarios-count {
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.blog-comentarios {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #f0d8e6;
+}
+
+.blog-comentarios h4 {
+  margin: 0 0 0.75rem;
+  font-size: 0.95rem;
+}
+
+.blog-sin-comentarios {
+  font-size: 0.85rem;
+  color: #888;
+  font-style: italic;
+  margin: 0 0 0.75rem;
+}
+
+.blog-comentarios-lista {
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.blog-comentarios-lista li {
+  background: #faf5f8;
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 1px solid #f0e0ea;
+}
+
+.blog-comentario-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.35rem;
+  font-size: 0.82rem;
+}
+
+.blog-comentario-meta time {
+  color: #999;
+}
+
+.blog-comentarios-lista p {
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.blog-form-comentario {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.blog-form-comentario textarea,
+.blog-field textarea,
+.blog-field select {
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid #e8c4d8;
+  border-radius: 8px;
+  font: inherit;
+  resize: vertical;
+}
+
+.blog-form-comentario textarea:focus,
+.blog-field textarea:focus,
+.blog-field select:focus {
+  outline: 2px solid rgba(214, 51, 108, 0.25);
+  border-color: var(--color-acento);
+}
+
+.blog-exp-layout {
+  display: grid;
+  grid-template-columns: minmax(260px, 340px) 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.blog-exp-form,
+.blog-exp-lista {
+  background: #fff;
+  padding: 1.25rem;
+  border-radius: var(--border-radius);
+  box-shadow: 0 4px 14px rgba(214, 51, 108, 0.08);
+}
+
+.blog-exp-form h3,
+.blog-exp-lista h3 {
+  margin: 0 0 1rem;
+  font-size: 1rem;
+}
+
+.blog-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.88rem;
+  margin-bottom: 0.85rem;
+}
+
+.blog-exp-card {
+  padding: 1rem;
+  border-radius: 10px;
+  background: var(--color-suave);
+  border: 1px solid #f0d0e4;
+  margin-bottom: 0.75rem;
+}
+
+.blog-exp-card:last-child {
+  margin-bottom: 0;
+}
+
+.blog-exp-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.blog-exp-producto {
+  display: block;
+  font-size: 0.82rem;
+  color: var(--color-acento);
+  font-weight: 600;
+  margin-top: 0.15rem;
+}
+
+.blog-estrellas {
+  color: #f5a623;
+  font-size: 0.95rem;
+  letter-spacing: 1px;
+  flex-shrink: 0;
+}
+
+.blog-exp-card p {
+  margin: 0 0 0.35rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.blog-exp-card time {
+  font-size: 0.78rem;
+  color: #999;
 }
 
 /* ─── Cursos ─────────────────────────────────────────────── */
@@ -1035,8 +1450,33 @@ footer.site-footer {
   }
 
   .cursos-grid,
-  .pagos-grid {
+  .pagos-grid,
+  .blog-tips-grid {
     grid-template-columns: 1fr;
+  }
+
+  .blog-tip-card.abierto {
+    flex-direction: column;
+  }
+
+  .blog-tip-card.abierto .blog-tip-media {
+    width: 100%;
+  }
+
+  .blog-exp-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .quienes-card {
+    padding: 1.5rem;
+  }
+
+  .quienes-intro h2 {
+    font-size: 1.5rem;
+  }
+
+  .quienes-highlights {
+    grid-template-columns: 1fr 1fr;
   }
 
   .social-float {

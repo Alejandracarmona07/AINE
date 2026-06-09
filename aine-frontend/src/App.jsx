@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import AuthModal from './components/AuthModal.jsx'
+import BlogComunidad from './components/BlogComunidad.jsx'
 import Carrito from './components/Carrito.jsx'
 import { useAuth } from './hooks/useAuth.js'
 import { useCart } from './hooks/useCart.js'
@@ -83,6 +84,7 @@ function App() {
     <nav className="flex items-center gap-1">
       <a className="nav-link" href="#productos">Productos</a>
       <a className="nav-link" href="#cursos">Cursos</a>
+      <a className="nav-link" href="#blog">Tips</a>
       <a className="nav-link" href="#pagos">Pagos</a>
     </nav>
 
@@ -187,9 +189,45 @@ function App() {
         </section>
 
         {contenido.quienes_somos_texto && (
-          <section>
-            <h2>{contenido.quienes_somos_titulo ?? '¿Quiénes somos?'}</h2>
-            <p className="text-base intro-text">{contenido.quienes_somos_texto}</p>
+          <section className="quienes-section" aria-labelledby="quienes-titulo">
+            <div className="quienes-card">
+              <div className="quienes-intro">
+                <span className="quienes-eyebrow">Nuestra esencia</span>
+                <h2 id="quienes-titulo">{contenido.quienes_somos_titulo ?? '¿Quiénes somos?'}</h2>
+                <p className="quienes-texto">{contenido.quienes_somos_texto}</p>
+              </div>
+
+              <ul className="quienes-highlights">
+                <li>
+                  <span className="quienes-icon" aria-hidden="true">✨</span>
+                  <div>
+                    <strong>Variedad</strong>
+                    <span>Productos para cada estilo y ocasión</span>
+                  </div>
+                </li>
+                <li>
+                  <span className="quienes-icon" aria-hidden="true">💗</span>
+                  <div>
+                    <strong>Precios especiales</strong>
+                    <span>Belleza accesible sin renunciar a calidad</span>
+                  </div>
+                </li>
+                <li>
+                  <span className="quienes-icon" aria-hidden="true">🌎</span>
+                  <div>
+                    <strong>Nacional e internacional</strong>
+                    <span>Marcas que amas, en un solo lugar</span>
+                  </div>
+                </li>
+                <li>
+                  <span className="quienes-icon" aria-hidden="true">💄</span>
+                  <div>
+                    <strong>Para ti</strong>
+                    <span>Maquillaje pensado para todos los gustos</span>
+                  </div>
+                </li>
+              </ul>
+            </div>
           </section>
         )}
 
@@ -205,6 +243,13 @@ function App() {
             ))}
           </div>
         </section>
+
+        <BlogComunidad
+          contenido={contenido}
+          productos={productos}
+          usuario={auth.usuario}
+          onAbrirLogin={() => auth.abrir('login')}
+        />
 
         <section id="cursos" className="cursos-section">
           <div className="section-head">

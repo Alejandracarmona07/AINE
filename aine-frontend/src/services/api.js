@@ -49,3 +49,23 @@ export function loginUsuario(credentials) {
 export function registrarUsuario(payload) {
   return apiPost('/api/auth/registro', payload)
 }
+
+export async function fetchBlogTips() {
+  const data = await apiGet('/api/blog/tips')
+  return data.tips ?? []
+}
+
+export async function fetchBlogComentarios({ tipo, tipId, productoId } = {}) {
+  const params = new URLSearchParams()
+  if (tipo) params.set('tipo', tipo)
+  if (tipId != null) params.set('tipId', String(tipId))
+  if (productoId != null) params.set('productoId', String(productoId))
+  const qs = params.toString()
+  const data = await apiGet(`/api/blog/comentarios${qs ? `?${qs}` : ''}`)
+  return data.comentarios ?? []
+}
+
+export async function crearComentarioBlog(payload) {
+  const data = await apiPost('/api/blog/comentarios', payload)
+  return data.comentario
+}

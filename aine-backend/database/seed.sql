@@ -54,7 +54,12 @@ INSERT INTO contenido_sitio (clave, valor) VALUES
   ('footer_whatsapp_texto', '311 259 9598'),
   ('footer_whatsapp_url', 'https://wa.me/573112599598'),
   ('footer_copy', '© AINÉ — Maquillaje, belleza y cursos'),
-  ('contacto_whatsapp', '573112599598')
+  ('contacto_whatsapp', '573112599598'),
+  ('blog_titulo', 'Tips & Comunidad AINÉ'),
+  ('blog_subtitulo', 'Aprende gratis, comparte tu experiencia y descubre qué productos ama nuestra comunidad'),
+  ('blog_tips_tab', 'Tips gratis'),
+  ('blog_exp_tab', 'Experiencias'),
+  ('blog_comentar_cta', 'Inicia sesión para comentar y compartir tu experiencia con los productos AINÉ.')
 ON DUPLICATE KEY UPDATE valor = VALUES(valor);
 
 INSERT INTO redes_sociales (nombre, url, icono_url, orden) VALUES

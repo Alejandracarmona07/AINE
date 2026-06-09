@@ -11,6 +11,9 @@ function createApp({
   getCatalog,
   registerUser,
   loginUser,
+  listBlogTips,
+  listCommunityComments,
+  createCommunityComment,
 }) {
   const app = express();
 
@@ -102,6 +105,38 @@ function createApp({
     } catch (err) {
       const status = err.code === "validation_error" || err.code === "invalid_credentials" ? 401 : 500;
       res.status(status).json({ error: err.code ?? "login_failed", message: err?.message });
+    }
+  });
+
+  app.get("/api/blog/tips", async (_req, res) => {
+    try {
+      const tips = await listBlogTips.execute();
+      res.json({ tips });
+    } catch (err) {
+      res.status(500).json({ error: "blog_tips_fetch_failed", message: err?.message });
+    }
+  });
+
+  app.get("/api/blog/comentarios", async (req, res) => {
+    try {
+      const tipo = req.query.tipo;
+      const tipId = req.query.tipId ? Number(req.query.tipId) : undefined;
+      const productoId = req.query.productoId ? Number(req.query.productoId) : undefined;
+      const comentarios = await listCommunityComments.execute({ tipo, tipId, productoId });
+      res.json({ comentarios });
+    } catch (err) {
+      res.status(500).json({ error: "blog_comments_fetch_failed", message: err?.message });
+    }
+  });
+
+  app.post("/api/blog/comentarios", async (req, res) => {
+    try {
+      const comentario = await createCommunityComment.execute(req.body ?? {});
+      res.status(201).json({ comentario });
+    } catch (err) {
+      const status =
+        err.code === "validation_error" ? 400 : err.code === "auth_required" ? 401 : 500;
+      res.status(status).json({ error: err.code ?? "comment_create_failed", message: err?.message });
     }
   });
 
