@@ -25,5 +25,10 @@ const listCourses = new ListCourses({ courseRepository });
 const listPaymentMethods = new ListPaymentMethods({ paymentMethodRepository });
 
 const app = createApp({ checkDatabaseHealth, listProducts, listCourses, listPaymentMethods });
-startServer({ app, port: PORT });
+
+if (require.main === module) {
+  startServer({ app, port: PORT });
+}
+
+module.exports = app;
 
