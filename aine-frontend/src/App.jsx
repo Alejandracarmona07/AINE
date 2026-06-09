@@ -72,47 +72,54 @@ function App() {
   return (
     <div className="min-h-full">
       <header className="site-header">
-        <h1 className="text-xl font-semibold">
-          Tienda Virtual <strong>AINÉ</strong>
-        </h1>
-        <nav className="flex flex-wrap gap-2 items-center">
-          <a className="nav-link" href="#productos">
-            Productos
-          </a>
-          <a className="nav-link" href="#cursos">
-            Cursos
-          </a>
-          <a className="nav-link" href="#pagos">
-            Pagos
-          </a>
-          {auth.usuario ? (
-            <div className="auth-header-user">
-              <span>Hola, {auth.usuario.nombre}</span>
-              <button type="button" className="btn btn-sm btn-secondary" onClick={auth.logout}>
-                Salir
-              </button>
-            </div>
-          ) : (
-            <>
-              <button type="button" className="nav-link nav-link-btn" onClick={() => auth.abrir('login')}>
-                Iniciar sesión
-              </button>
-              <button type="button" className="nav-link nav-link-btn" onClick={() => auth.abrir('registro')}>
-                Registrarse
-              </button>
-            </>
-          )}
-          <button
-            type="button"
-            className="carrito-btn"
-            onClick={() => cart.setAbierto(true)}
-            aria-label={`Carrito, ${cart.cantidadTotal} artículos`}
-          >
-            🛒
-            {cart.cantidadTotal > 0 && <span className="carrito-badge">{cart.cantidadTotal}</span>}
+  <div style={{maxWidth:'var(--max-width)', margin:'0 auto', width:'100%', display:'flex', justifyContent:'space-between', alignItems:'center', height:'64px'}}>
+
+    {/* Logo — izquierda */}
+    <h1 className="text-xl font-semibold" style={{margin:0, flexShrink:0}}>
+      Tienda Virtual <strong>AINÉ</strong>
+    </h1>
+
+    {/* Nav — centro */}
+    <nav className="flex items-center gap-1">
+      <a className="nav-link" href="#productos">Productos</a>
+      <a className="nav-link" href="#cursos">Cursos</a>
+      <a className="nav-link" href="#pagos">Pagos</a>
+    </nav>
+
+    {/* Auth + carrito — derecha */}
+    <div className="flex items-center gap-2" style={{flexShrink:0}}>
+      {auth.usuario ? (
+        <>
+          <span style={{fontSize:'0.85rem', color:'#7a1a3a'}}>
+            Hola, <strong>{auth.usuario.nombre}</strong>
+          </span>
+          <button type="button" className="btn btn-sm btn-secondary" onClick={auth.logout}>
+            Salir
           </button>
-        </nav>
-      </header>
+        </>
+      ) : (
+        <>
+          <button type="button" className="btn btn-sm btn-secondary" onClick={() => auth.abrir('login')}>
+            Iniciar sesión
+          </button>
+          <button type="button" className="btn btn-sm" onClick={() => auth.abrir('registro')}>
+            ✨ Registrarse
+          </button>
+        </>
+      )}
+      <button
+        type="button"
+        className="carrito-btn"
+        onClick={() => cart.setAbierto(true)}
+        aria-label={`Carrito, ${cart.cantidadTotal} artículos`}
+      >
+        🛒
+        {cart.cantidadTotal > 0 && <span className="carrito-badge">{cart.cantidadTotal}</span>}
+      </button>
+    </div>
+
+  </div>
+</header>
 
       {cart.toast && <div className="cart-toast">{cart.toast}</div>}
 
@@ -140,6 +147,35 @@ function App() {
       />
 
       <main>
+        <section className="auth-section">
+          <div className="auth-card">
+            <h2>Únete a AINÉ</h2>
+            {auth.usuario ? (
+              <p>
+                Ya estás conectada como <strong>{auth.usuario.nombre}</strong>. Explora el catálogo y arma tu pedido.
+              </p>
+            ) : (
+              <p>Crea tu cuenta para guardar favoritos y recibir ofertas exclusivas.</p>
+            )}
+            <div className="auth-actions">
+              {auth.usuario ? (
+                <button type="button" className="btn btn-outline" onClick={auth.logout}>
+                  Cerrar sesión
+                </button>
+              ) : (
+                <>
+                  <button type="button" className="btn" onClick={() => auth.abrir('registro')}>
+                    Registrarse
+                  </button>
+                  <button type="button" className="btn btn-outline" onClick={() => auth.abrir('login')}>
+                    Iniciar sesión
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
+        </section>
+        
         <section className="banner" id="comprar">
           <div className="banner-content">
             {contenido.banner_tag && <p className="banner-tag">{contenido.banner_tag}</p>}
@@ -200,34 +236,7 @@ function App() {
           </div>
         </section>
 
-        <section className="auth-section">
-          <div className="auth-card">
-            <h2>Únete a AINÉ</h2>
-            {auth.usuario ? (
-              <p>
-                Ya estás conectada como <strong>{auth.usuario.nombre}</strong>. Explora el catálogo y arma tu pedido.
-              </p>
-            ) : (
-              <p>Crea tu cuenta para guardar favoritos y recibir ofertas exclusivas.</p>
-            )}
-            <div className="auth-actions">
-              {auth.usuario ? (
-                <button type="button" className="btn btn-outline" onClick={auth.logout}>
-                  Cerrar sesión
-                </button>
-              ) : (
-                <>
-                  <button type="button" className="btn" onClick={() => auth.abrir('registro')}>
-                    Registrarse
-                  </button>
-                  <button type="button" className="btn btn-outline" onClick={() => auth.abrir('login')}>
-                    Iniciar sesión
-                  </button>
-                </>
-              )}
-            </div>
-          </div>
-        </section>
+        
 
         <div id="productos">
           {cargando && <p className="centrado">Cargando productos...</p>}

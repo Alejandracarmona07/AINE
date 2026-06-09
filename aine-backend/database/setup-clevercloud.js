@@ -29,16 +29,29 @@ async function main() {
   console.log("Importando datos...");
   await runSqlFile(connection, path.join(dbDir, "seed.clevercloud.sql"));
 
-  console.log("Aplicando ampliación de catálogo...");
-  await runSqlFile(connection, path.join(dbDir, "migrations", "002_catalogo_ampliado.sql"));
+  const migrations = [
+    "002_catalogo_ampliado.sql",
+    "003_galeria.sql",
+    "004_contenido_sitio.sql",
+    "005_rutas_imagenes_catalogo.sql",
+  ];
+
+  for (const file of migrations) {
+    console.log(`Aplicando ${file}...`);
+    await runSqlFile(connection, path.join(dbDir, "migrations", file));
+  }
 
   const [tables] = await connection.query("SHOW TABLES");
   const [productos] = await connection.query("SELECT COUNT(*) AS total FROM productos");
   const [categorias] = await connection.query("SELECT COUNT(*) AS total FROM categorias");
+  const [galeria] = await connection.query("SELECT COUNT(*) AS total FROM galeria");
+  const [contenido] = await connection.query("SELECT COUNT(*) AS total FROM contenido_sitio");
 
   console.log("Tablas:", tables.map((t) => Object.values(t)[0]).join(", "));
   console.log("Productos:", productos[0].total);
   console.log("Categorías:", categorias[0].total);
+  console.log("Galería:", galeria[0].total);
+  console.log("Contenido sitio:", contenido[0].total);
 
   await connection.end();
   console.log("Listo: base de datos enlazada a Clever Cloud.");
