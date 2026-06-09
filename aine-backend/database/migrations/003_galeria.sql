@@ -14,7 +14,7 @@ SELECT * FROM (
   UNION ALL SELECT '/images/galeria/look2.jpg', 'Rubor fresh', 2
   UNION ALL SELECT '/images/galeria/look3.jpg', 'Labios intensos', 3
   UNION ALL SELECT '/images/galeria/look4.jpg', 'Mirada impacto', 4
-  UNION ALL SELECT '/images/maquillaje2.jpg', 'Look profesional', 5
-  UNION ALL SELECT '/images/maquillaje3.jpg', 'Estilo editorial', 6
+  UNION ALL SELECT '/images/catalogo/maquillaje2.jpg', 'Look profesional', 5
+  UNION ALL SELECT '/images/catalogo/maquillaje3.jpg', 'Estilo editorial', 6
 ) AS seed
 WHERE NOT EXISTS (SELECT 1 FROM galeria LIMIT 1);
