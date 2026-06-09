@@ -31,8 +31,8 @@ WHERE NOT EXISTS (SELECT 1 FROM productos p WHERE p.nombre = v.nombre AND p.cate
 INSERT INTO cursos (titulo, descripcion, precio, imagen_url)
 SELECT v.titulo, v.descripcion, v.precio, v.imagen_url
 FROM (
-  SELECT 'Maquillaje básico' AS titulo, 'Aprende técnicas esenciales para el día a día.' AS descripcion, 89000 AS precio, '/images/maquillaje.jpg' AS imagen_url
-  UNION ALL SELECT 'Contouring y highlighting', 'Resalta tu belleza con técnicas profesionales.', 120000, '/images/maquillaje2.jpg'
-  UNION ALL SELECT 'Labios perfectos', 'Tips y tendencias para un acabado impecable.', 75000, '/images/maquillaje3.jpg'
+  SELECT 'Maquillaje básico' AS titulo, 'Aprende técnicas esenciales para el día a día.' AS descripcion, 89000 AS precio, '/images/cursos/maquillaje-basico.jpg' AS imagen_url
+  UNION ALL SELECT 'Contouring y highlighting', 'Resalta tu belleza con técnicas profesionales.', 120000, '/images/cursos/contouring.jpg'
+  UNION ALL SELECT 'Labios perfectos', 'Tips y tendencias para un acabado impecable.', 75000, '/images/cursos/labios.jpg'
 ) AS v
 WHERE NOT EXISTS (SELECT 1 FROM cursos c WHERE c.titulo = v.titulo);

@@ -11,15 +11,18 @@ CREATE TABLE IF NOT EXISTS formas_pago (
   created_at  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
-INSERT INTO formas_pago (nombre, descripcion, icono_url, orden) VALUES
-  ('Nequi', 'Paga al instante con tu celular.', '/images/pagos/nequi.svg', 1),
-  ('Daviplata', 'Transferencia rápida desde Daviplata.', '/images/pagos/daviplata.svg', 2),
-  ('Bancolombia', 'Transferencia a cuenta de ahorros o corriente.', '/images/pagos/bancolombia.svg', 3),
-  ('PSE', 'Débito desde tu banco en línea.', '/images/pagos/pse.svg', 4),
-  ('Tarjeta', 'Crédito o débito Visa / Mastercard.', '/images/pagos/tarjeta.svg', 5),
-  ('Efectivo', 'Pago contra entrega en Medellín y área metropolitana.', '/images/pagos/efectivo.svg', 6),
-  ('WhatsApp', 'Coordina tu pedido y pago por chat.', '/images/pagos/whatsapp.svg', 7)
-ON DUPLICATE KEY UPDATE descripcion = VALUES(descripcion), icono_url = VALUES(icono_url), orden = VALUES(orden);
+INSERT INTO formas_pago (nombre, descripcion, icono_url, orden)
+SELECT v.nombre, v.descripcion, v.icono_url, v.orden
+FROM (
+  SELECT 'Nequi' AS nombre, 'Paga al instante con tu celular.' AS descripcion, '/images/pagos/nequi.svg' AS icono_url, 1 AS orden
+  UNION ALL SELECT 'Daviplata', 'Transferencia rápida desde Daviplata.', '/images/pagos/daviplata.svg', 2
+  UNION ALL SELECT 'Bancolombia', 'Transferencia a cuenta de ahorros o corriente.', '/images/pagos/bancolombia.svg', 3
+  UNION ALL SELECT 'PSE', 'Débito desde tu banco en línea.', '/images/pagos/pse.svg', 4
+  UNION ALL SELECT 'Tarjeta', 'Crédito o débito Visa / Mastercard.', '/images/pagos/tarjeta.svg', 5
+  UNION ALL SELECT 'Efectivo', 'Pago contra entrega en Medellín y área metropolitana.', '/images/pagos/efectivo.svg', 6
+  UNION ALL SELECT 'WhatsApp', 'Coordina tu pedido y pago por chat.', '/images/pagos/whatsapp.svg', 7
+) AS v
+WHERE NOT EXISTS (SELECT 1 FROM formas_pago fp WHERE fp.nombre = v.nombre);
 
 INSERT INTO productos (categoria_id, nombre, descripcion, precio, imagen_url, stock)
 SELECT c.id, v.nombre, v.descripcion, v.precio, v.imagen_url, v.stock
