@@ -13,8 +13,12 @@
     "node": ">=20"
   },
   "dependencies": {
+    "add": "^2.0.6",
+    "npx": "^10.2.2",
+    "plugins": "^1.3.1",
     "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "react-dom": "^19.2.0",
+    "vercel-plugin": "github:vercel/vercel-plugin"
   },
   "devDependencies": {
     "@eslint/js": "^9.37.0",

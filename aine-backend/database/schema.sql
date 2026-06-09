@@ -107,6 +107,18 @@ CREATE TABLE IF NOT EXISTS pedido_items (
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------------
+-- Galería de inspiración
+-- ---------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS galeria (
+  id         INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  imagen_url VARCHAR(255) NOT NULL,
+  titulo     VARCHAR(120) NOT NULL,
+  activo     TINYINT(1) NOT NULL DEFAULT 1,
+  orden      INT UNSIGNED NOT NULL DEFAULT 0,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------------------------
 -- Formas de pago
 -- ---------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS formas_pago (

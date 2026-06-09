@@ -29,6 +29,14 @@ INSERT INTO cursos (titulo, descripcion, precio, imagen_url) VALUES
   ('Contouring y highlighting', 'Resalta tu belleza con técnicas profesionales.', 120000, '/images/cursos/contouring.jpg'),
   ('Labios perfectos', 'Tips y tendencias para un acabado impecable.', 75000, '/images/cursos/labios.jpg');
 
+INSERT INTO galeria (imagen_url, titulo, orden) VALUES
+  ('/images/galeria/look1.jpg', 'Glow natural', 1),
+  ('/images/galeria/look2.jpg', 'Rubor fresh', 2),
+  ('/images/galeria/look3.jpg', 'Labios intensos', 3),
+  ('/images/galeria/look4.jpg', 'Mirada impacto', 4),
+  ('/images/maquillaje2.jpg', 'Look profesional', 5),
+  ('/images/maquillaje3.jpg', 'Estilo editorial', 6);
+
 INSERT INTO formas_pago (nombre, descripcion, icono_url, orden) VALUES
   ('Nequi', 'Paga al instante con tu celular.', '/images/pagos/nequi.svg', 1),
   ('Daviplata', 'Transferencia rápida desde Daviplata.', '/images/pagos/daviplata.svg', 2),

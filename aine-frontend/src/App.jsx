@@ -1,45 +1,31 @@
 import { useEffect, useState } from 'react'
+import AuthModal from './components/AuthModal.jsx'
 import Carrito from './components/Carrito.jsx'
+import { useAuth } from './hooks/useAuth.js'
 import { useCart } from './hooks/useCart.js'
 import PWABadge from './PWABadge.jsx'
-
-const CATEGORIAS = ['Pestañinas', 'Bases', 'Rubores', 'Labiales']
-
-const CATEGORIA_DESCRIPCION = {
-  Pestañinas: 'Encuentra aquí la pestañina que buscas: diferentes marcas, colores y precios.',
-  Bases: 'Bases con muy buena cobertura: polvo compacto, suelto, líquido, en barra y más según tu necesidad.',
-  Rubores: 'Rubor en crema, líquido, barra y polvo; paletas y perlas para un acabado perfecto.',
-  Labiales: 'Labiales en todos los tonos: mate, gloss, hidratantes y más para cada ocasión.',
-}
-
-const GALERIA = [
-  { src: '/images/galeria/look1.jpg', titulo: 'Glow natural' },
-  { src: '/images/galeria/look2.jpg', titulo: 'Rubor fresh' },
-  { src: '/images/galeria/look3.jpg', titulo: 'Labios intensos' },
-  { src: '/images/galeria/look4.jpg', titulo: 'Mirada impacto' },
-  { src: '/images/maquillaje2.jpg', titulo: 'Look profesional' },
-  { src: '/images/maquillaje3.jpg', titulo: 'Estilo editorial' },
-]
+import { fetchCatalogo } from './services/api.js'
 
 function App() {
   const [productos, setProductos] = useState([])
   const [cursos, setCursos] = useState([])
   const [formasPago, setFormasPago] = useState([])
+  const [categorias, setCategorias] = useState([])
+  const [galeria, setGaleria] = useState([])
   const [cargando, setCargando] = useState(true)
   const [error, setError] = useState(null)
 
   const cart = useCart()
+  const auth = useAuth()
 
   useEffect(() => {
-    Promise.all([
-      fetch('/api/productos').then((r) => (r.ok ? r.json() : Promise.reject())),
-      fetch('/api/cursos').then((r) => (r.ok ? r.json() : Promise.reject())),
-      fetch('/api/formas-pago').then((r) => (r.ok ? r.json() : Promise.reject())),
-    ])
-      .then(([prodData, cursoData, pagoData]) => {
-        setProductos(prodData.productos ?? [])
-        setCursos(cursoData.cursos ?? [])
-        setFormasPago(pagoData.formasPago ?? [])
+    fetchCatalogo()
+      .then((data) => {
+        setProductos(data.productos)
+        setCursos(data.cursos)
+        setFormasPago(data.formasPago)
+        setCategorias(data.categorias)
+        setGaleria(data.galeria)
       })
       .catch(() => setError('No se pudo cargar el catálogo. Verifica que el backend esté activo.'))
       .finally(() => setCargando(false))
@@ -89,6 +75,23 @@ function App() {
           <a className="nav-link" href="#pagos">
             Pagos
           </a>
+          {auth.usuario ? (
+            <div className="auth-header-user">
+              <span>Hola, {auth.usuario.nombre}</span>
+              <button type="button" className="btn btn-sm btn-secondary" onClick={auth.logout}>
+                Salir
+              </button>
+            </div>
+          ) : (
+            <>
+              <button type="button" className="nav-link nav-link-btn" onClick={() => auth.abrir('login')}>
+                Iniciar sesión
+              </button>
+              <button type="button" className="nav-link nav-link-btn" onClick={() => auth.abrir('registro')}>
+                Registrarse
+              </button>
+            </>
+          )}
           <button
             type="button"
             className="carrito-btn"
@@ -102,6 +105,18 @@ function App() {
       </header>
 
       {cart.toast && <div className="cart-toast">{cart.toast}</div>}
+
+      <AuthModal
+        abierto={auth.abierto}
+        vista={auth.vista}
+        cargando={auth.cargando}
+        error={auth.error}
+        mensaje={auth.mensaje}
+        onCerrar={auth.cerrar}
+        onCambiarVista={auth.setVista}
+        onLogin={auth.login}
+        onRegistro={auth.registro}
+      />
 
       <Carrito
         items={cart.items}
@@ -136,9 +151,9 @@ function App() {
           <h2>Inspiración & looks</h2>
           <p className="centrado galeria-sub">Descubre combinaciones y tendencias de nuestra comunidad AINÉ</p>
           <div className="galeria-grid">
-            {GALERIA.map((item) => (
-              <figure key={item.src} className="galeria-item">
-                <img src={item.src} alt={item.titulo} loading="lazy" />
+            {galeria.map((item) => (
+              <figure key={item.id} className="galeria-item">
+                <img src={item.imagen} alt={item.titulo} loading="lazy" />
                 <figcaption>{item.titulo}</figcaption>
               </figure>
             ))}
@@ -178,14 +193,28 @@ function App() {
         <section className="auth-section">
           <div className="auth-card">
             <h2>Únete a AINÉ</h2>
-            <p>Crea tu cuenta para guardar favoritos y recibir ofertas exclusivas.</p>
+            {auth.usuario ? (
+              <p>
+                Ya estás conectada como <strong>{auth.usuario.nombre}</strong>. Explora el catálogo y arma tu pedido.
+              </p>
+            ) : (
+              <p>Crea tu cuenta para guardar favoritos y recibir ofertas exclusivas.</p>
+            )}
             <div className="auth-actions">
-              <a href="#" className="btn">
-                Registrarse
-              </a>
-              <a href="#" className="btn btn-outline">
-                Iniciar sesión
-              </a>
+              {auth.usuario ? (
+                <button type="button" className="btn btn-outline" onClick={auth.logout}>
+                  Cerrar sesión
+                </button>
+              ) : (
+                <>
+                  <button type="button" className="btn" onClick={() => auth.abrir('registro')}>
+                    Registrarse
+                  </button>
+                  <button type="button" className="btn btn-outline" onClick={() => auth.abrir('login')}>
+                    Iniciar sesión
+                  </button>
+                </>
+              )}
             </div>
           </div>
         </section>
@@ -194,14 +223,14 @@ function App() {
           {cargando && <p className="centrado">Cargando productos...</p>}
           {error && <p className="centrado error-msg">{error}</p>}
 
-          {CATEGORIAS.map((cat) => {
-            const items = productos.filter((p) => p.categoria === cat)
+          {categorias.map((cat) => {
+            const items = productos.filter((p) => p.categoria === cat.nombre)
             if (!items.length && !cargando) return null
             return (
-              <article key={cat} className="categoria-section">
-                <h2>{cat}</h2>
-                <p className="centrado">{CATEGORIA_DESCRIPCION[cat]}</p>
-                <div className="categoria" id={`categoria-${cat}`}>
+              <article key={cat.id} className="categoria-section">
+                <h2>{cat.nombre}</h2>
+                {cat.descripcion && <p className="centrado">{cat.descripcion}</p>}
+                <div className="categoria" id={`categoria-${cat.nombre}`}>
                   {items.map((p) => (
                     <div key={p.id} className="producto">
                       <div className="producto-img-wrap">

@@ -1,7 +1,16 @@
 const cors = require("cors");
 const express = require("express");
 
-function createApp({ checkDatabaseHealth, listProducts, listCourses, listPaymentMethods }) {
+function createApp({
+  checkDatabaseHealth,
+  listProducts,
+  listCourses,
+  listPaymentMethods,
+  listCategories,
+  listGallery,
+  registerUser,
+  loginUser,
+}) {
   const app = express();
 
   app.use(cors());
@@ -44,6 +53,45 @@ function createApp({ checkDatabaseHealth, listProducts, listCourses, listPayment
       res.json({ formasPago });
     } catch (err) {
       res.status(500).json({ error: "payment_methods_fetch_failed", message: err?.message });
+    }
+  });
+
+  app.get("/api/categorias", async (_req, res) => {
+    try {
+      const categorias = await listCategories.execute();
+      res.json({ categorias });
+    } catch (err) {
+      res.status(500).json({ error: "categories_fetch_failed", message: err?.message });
+    }
+  });
+
+  app.get("/api/galeria", async (_req, res) => {
+    try {
+      const galeria = await listGallery.execute();
+      res.json({ galeria });
+    } catch (err) {
+      res.status(500).json({ error: "gallery_fetch_failed", message: err?.message });
+    }
+  });
+
+  app.post("/api/auth/registro", async (req, res) => {
+    try {
+      const usuario = await registerUser.execute(req.body ?? {});
+      res.status(201).json({ usuario });
+    } catch (err) {
+      const status =
+        err.code === "validation_error" ? 400 : err.code === "email_taken" ? 409 : 500;
+      res.status(status).json({ error: err.code ?? "register_failed", message: err?.message });
+    }
+  });
+
+  app.post("/api/auth/login", async (req, res) => {
+    try {
+      const usuario = await loginUser.execute(req.body ?? {});
+      res.json({ usuario });
+    } catch (err) {
+      const status = err.code === "validation_error" || err.code === "invalid_credentials" ? 401 : 500;
+      res.status(status).json({ error: err.code ?? "login_failed", message: err?.message });
     }
   });
 
