@@ -32,7 +32,8 @@
     "dev": "node --watch index.js",
     "start": "node index.js",
     "db:clevercloud": "node database/setup-clevercloud.js",
-    "db:migrate": "node database/run-migration.js"
+    "db:migrate": "node database/run-migration.js",
+    "stripe:check": "node scripts/check-stripe.js"
   },
   "dependencies": {
     "cors": "^2.8.6",

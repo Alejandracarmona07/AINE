@@ -18,6 +18,8 @@ function createApp({
   handleStripeWebhook,
   getStripePaymentStatus,
   stripePublishableKey,
+  listCourseSessions,
+  registerCourseEnrollment,
 }) {
   const app = express();
 
@@ -182,6 +184,27 @@ function createApp({
             ? 503
             : 500;
       res.status(status).json({ error: err.code ?? "checkout_failed", message: err?.message });
+    }
+  });
+
+  app.get("/api/cursos/:cursoId/fechas", async (req, res) => {
+    try {
+      const fechas = await listCourseSessions.execute({ cursoId: req.params.cursoId });
+      res.json({ fechas });
+    } catch (err) {
+      const status = err.code === "validation_error" ? 400 : 500;
+      res.status(status).json({ error: err.code ?? "course_sessions_failed", message: err?.message });
+    }
+  });
+
+  app.post("/api/cursos/inscripciones", async (req, res) => {
+    try {
+      const inscripcion = await registerCourseEnrollment.execute(req.body ?? {});
+      res.status(201).json({ inscripcion });
+    } catch (err) {
+      const status =
+        err.code === "validation_error" || err.code === "no_cupos" ? 400 : 500;
+      res.status(status).json({ error: err.code ?? "enrollment_failed", message: err?.message });
     }
   });
 

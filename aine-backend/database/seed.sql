@@ -42,7 +42,7 @@ INSERT INTO contenido_sitio (clave, valor) VALUES
   ('banner_titulo', 'Consiente tu piel con AINÉ'),
   ('banner_btn', 'Ver catálogo'),
   ('quienes_somos_titulo', '¿Quiénes somos?'),
-  ('quienes_somos_texto', 'En nuestra tienda virtual contamos con variedad, precios especiales, productos nacionales e internacionales. Tenemos maquillaje para todos los gustos y necesidades. ¡Consiéntete!'),
+  ('quienes_somos_texto', 'En nuestra tienda virtual contamos con variedad, precios especiales, productos nacionales e internacionales y también contamos con tips gratis y cursos para que aprendas a usar nuestros productos y a verte radiante. Tenemos maquillaje para todos los gustos y tonos. ¡Consiéntete!'),
   ('galeria_titulo', 'Inspiración & looks'),
   ('galeria_subtitulo', 'Descubre combinaciones y tendencias de nuestra comunidad AINÉ'),
   ('cursos_titulo', 'Aprende Maquillaje con AINÉ'),

@@ -19,6 +19,11 @@ const { CreateCommunityComment } = require("./src/application/usecases/CreateCom
 const { CreateStripeCheckout } = require("./src/application/usecases/CreateStripeCheckout");
 const { HandleStripeWebhook } = require("./src/application/usecases/HandleStripeWebhook");
 const { GetStripePaymentStatus } = require("./src/application/usecases/GetStripePaymentStatus");
+const { ListCourseSessions } = require("./src/application/usecases/ListCourseSessions");
+const { RegisterCourseEnrollment } = require("./src/application/usecases/RegisterCourseEnrollment");
+const { MysqlCourseSessionRepository } = require("./src/infrastructure/mysql/MysqlCourseSessionRepository");
+const { MysqlCourseEnrollmentRepository } = require("./src/infrastructure/mysql/MysqlCourseEnrollmentRepository");
+const { readStripeEnv } = require("./src/config/stripeEnv");
 const { createStripeClient } = require("./src/infrastructure/stripe/createStripeClient");
 const { MysqlStripePaymentRepository } = require("./src/infrastructure/mysql/MysqlStripePaymentRepository");
 const { createApp } = require("./src/infrastructure/http/app");
@@ -72,18 +77,27 @@ const listBlogTips = new ListBlogTips({ blogTipRepository });
 const listCommunityComments = new ListCommunityComments({ communityCommentRepository });
 const createCommunityComment = new CreateCommunityComment({ communityCommentRepository, userRepository });
 const stripePaymentRepository = new MysqlStripePaymentRepository({ pool });
-const stripe = createStripeClient(process.env.STRIPE_SECRET_KEY);
+const stripeEnv = readStripeEnv();
+const stripe = createStripeClient(stripeEnv.secretKey);
 const createStripeCheckout = new CreateStripeCheckout({
   stripe,
   stripePaymentRepository,
-  frontendUrl: process.env.FRONTEND_URL,
+  frontendUrl: stripeEnv.frontendUrl,
 });
 const handleStripeWebhook = new HandleStripeWebhook({
   stripe,
-  webhookSecret: process.env.STRIPE_WEBHOOK_SECRET,
+  webhookSecret: stripeEnv.webhookSecret,
   stripePaymentRepository,
 });
-const getStripePaymentStatus = new GetStripePaymentStatus({ stripePaymentRepository });
+const getStripePaymentStatus = new GetStripePaymentStatus({ stripe, stripePaymentRepository });
+const courseSessionRepository = new MysqlCourseSessionRepository({ pool });
+const courseEnrollmentRepository = new MysqlCourseEnrollmentRepository({ pool });
+const listCourseSessions = new ListCourseSessions({ courseSessionRepository });
+const registerCourseEnrollment = new RegisterCourseEnrollment({
+  courseSessionRepository,
+  courseEnrollmentRepository,
+  pool,
+});
 
 const app = createApp({
   checkDatabaseHealth,
@@ -101,7 +115,9 @@ const app = createApp({
   createStripeCheckout,
   handleStripeWebhook,
   getStripePaymentStatus,
-  stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
+  stripePublishableKey: stripeEnv.publishableKey,
+  listCourseSessions,
+  registerCourseEnrollment,
 });
 
 module.exports = app;

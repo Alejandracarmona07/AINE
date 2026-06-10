@@ -81,3 +81,12 @@ export function crearStripeCheckout(payload) {
 export function fetchPagoEstado(sessionId) {
   return apiGet(`/api/pagos/estado/${encodeURIComponent(sessionId)}`)
 }
+
+export async function fetchFechasCurso(cursoId) {
+  const data = await apiGet(`/api/cursos/${cursoId}/fechas`)
+  return data.fechas ?? []
+}
+
+export function crearInscripcionCurso(payload) {
+  return apiPost('/api/cursos/inscripciones', payload)
+}
