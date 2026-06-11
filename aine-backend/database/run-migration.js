@@ -37,8 +37,23 @@ async function runSqlFile(connection, filePath) {
   await connection.query(sql);
 }
 
+async function connectWithRetry(maxAttempts = 12, delayMs = 5000) {
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      return await createConnection();
+    } catch (err) {
+      const isConnLimit = /max_user_connections/i.test(err.message);
+      if (!isConnLimit || attempt === maxAttempts) throw err;
+      console.log(
+        `Conexiones ocupadas (${attempt}/${maxAttempts}). Reintento en ${delayMs / 1000}s...`,
+      );
+      await new Promise((r) => setTimeout(r, delayMs));
+    }
+  }
+}
+
 async function main() {
-  const connection = await createConnection();
+  const connection = await connectWithRetry();
   const migrationsDir = path.join(__dirname, "migrations");
 
   for (const file of MIGRATIONS) {

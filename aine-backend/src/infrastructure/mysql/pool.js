@@ -24,8 +24,8 @@ function createMysqlPool(env = process.env) {
     cachedPool = mysql.createPool({
       uri: cfg.uri,
       waitForConnections: true,
-      connectionLimit: isServerless ? 1 : 5,
-      maxIdle: isServerless ? 0 : 5,
+      connectionLimit: 1,
+      maxIdle: isServerless ? 0 : 1,
       idleTimeout: isServerless ? 5_000 : 60_000,
       queueLimit: 0,
       enableKeepAlive: false,
@@ -42,8 +42,8 @@ function createMysqlPool(env = process.env) {
   cachedPool = mysql.createPool({
     ...cfg,
     waitForConnections: true,
-    connectionLimit: isServerless ? 1 : 5,
-    maxIdle: isServerless ? 0 : 5,
+    connectionLimit: 1,
+    maxIdle: isServerless ? 0 : 1,
     idleTimeout: isServerless ? 5_000 : 60_000,
     queueLimit: 0,
     enableKeepAlive: false,

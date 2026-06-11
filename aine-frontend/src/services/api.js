@@ -1,18 +1,25 @@
 import { apiUrl } from '../config/api.js'
 
+const BACKEND_OFFLINE_MSG =
+  'El backend no está activo. En otra terminal ejecuta: cd aine-backend && npm run dev'
+
+function mensajeErrorHttp(path, res, data) {
+  if (data.message) return data.message
+  if (res.status >= 500) return BACKEND_OFFLINE_MSG
+  return `Error al consultar ${path}`
+}
+
 async function apiGet(path) {
   let res
   try {
     res = await fetch(apiUrl(path))
   } catch {
-    throw new Error(
-      'No se pudo conectar con el backend. Inicia el servidor: cd aine-backend && npm run dev',
-    )
+    throw new Error(BACKEND_OFFLINE_MSG)
   }
 
   const data = await res.json().catch(() => ({}))
   if (!res.ok) {
-    throw new Error(data.message ?? `Error al consultar ${path}`)
+    throw new Error(mensajeErrorHttp(path, res, data))
   }
   return data
 }
@@ -24,7 +31,7 @@ async function apiPost(path, body) {
     body: JSON.stringify(body),
   })
   const data = await res.json().catch(() => ({}))
-  if (!res.ok) throw new Error(data.message ?? `Error al enviar ${path}`)
+  if (!res.ok) throw new Error(mensajeErrorHttp(path, res, data))
   return data
 }
 
